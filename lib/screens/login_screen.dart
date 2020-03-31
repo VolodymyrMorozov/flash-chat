@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -11,6 +13,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
+  String email;
+  String password;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   AnimationController controller;
   @override
   void initState() {
@@ -41,8 +47,10 @@ class _LoginScreenState extends State<LoginScreen>
               height: 48.0,
             ),
             TextField(
+              keyboardType: TextInputType.emailAddress,
+              textAlign: TextAlign.center,
               onChanged: (value) {
-                //Do something with the user input.
+                email = value;
               },
               decoration:
                   kTextFieldDecoration.copyWith(hintText: 'Enter your email.'),
@@ -51,8 +59,10 @@ class _LoginScreenState extends State<LoginScreen>
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                   hintText: 'Enter your password.'),
@@ -61,7 +71,19 @@ class _LoginScreenState extends State<LoginScreen>
               height: 24.0,
             ),
             RoundedButton(
-                text: 'Log In', onTap: () {}, color: Colors.lightBlueAccent),
+                text: 'Log In',
+                onTap: () async {
+                  try {
+                    final result = await _auth.signInWithEmailAndPassword(
+                        email: email, password: password);
+                    if (result != null && result.user != null) {
+                      Navigator.pushNamed(context, ChatScreen.id);
+                    }
+                  } catch (ex) {
+                    print(ex);
+                  }
+                },
+                color: Colors.lightBlueAccent),
           ],
         ),
       ),
