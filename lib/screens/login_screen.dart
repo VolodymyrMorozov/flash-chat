@@ -14,8 +14,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
-  String email = 'morozov_vladimir@ukr.net';
-  String password = 'qwertyui';
+  String email;
+  String password;
   bool showSninner = false;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
